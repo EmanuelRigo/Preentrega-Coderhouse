@@ -1,0 +1,52 @@
+[
+  {
+    "destino": "París, Francia",
+    "duracion": 7,
+    "costo": 1500
+  },
+  {
+    "destino": "Tokio, Japón",
+    "duracion": 10,
+    "costo": 2500
+  },
+  {
+    "destino": "Roma, Italia",
+    "duracion": 5,
+    "costo": 1200
+  },
+  {
+    "destino": "Nueva York, EE. UU.",
+    "duracion": 6,
+    "costo": 1800
+  },
+  {
+    "destino": "Sídney, Australia",
+    "duracion": 8,
+    "costo": 2200
+  },
+  {
+    "destino": "Barcelona, España",
+    "duracion": 4,
+    "costo": 1000
+  },
+  {
+    "destino": "Machu Picchu, Perú",
+    "duracion": 3,
+    "costo": 800
+  },
+  {
+    "destino": "Ciudad del Cabo, Sudáfrica",
+    "duracion": 9,
+    "costo": 2800
+  },
+  {
+    "destino": "Bangkok, Tailandia",
+    "duracion": 7,
+    "costo": 2700
+  },
+  {
+    "destino": "Buenos Aires, Argentina",
+    "duracion": 7,
+    "costo": 2000
+  }
+]

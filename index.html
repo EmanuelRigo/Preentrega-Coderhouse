@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <title>Document</title>
+  </head>
+  <body class="container">
+    <header class="row bg-success">
+      <div class="col-md-3 bg-primary" id="ubicacion"></div>
+      <div class="col-md-3 bg-danger">
+        <div>
+          <p id="saldo"></p>
+
+          <input type="number" id="input__sumarSaldo" />
+          <button id="btn__sumarSaldo">+</button>
+        </div>
+      </div>
+      <div class="col-md-6 bg-warning">
+        <div>
+          <button id="btn__disponibles">disponibles billetera</button>
+          <button id="btn__viajesTodos">todos los viajes</button>
+          <button id="btn__ordenarPrecio">ordenar por precio</button>
+          <select name="" id="select__precio">
+            <option selected disabled>seleccione un orden</option>
+            <option value="precioMasBajo">precio mas bajo</option>
+            <option value="precioMasAlto">precio mas alto</option>
+          </select>
+        </div>
+      </div>
+    </header>
+    <main class="row bg-success mt-4">
+      <div id="vuelos"></div>
+      <div id="destino"></div>
+      <button id="viajar">viajar</button>
+      <button id="btnVuelosRealizados">ver vuelos realizados</button>
+    </main>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>
