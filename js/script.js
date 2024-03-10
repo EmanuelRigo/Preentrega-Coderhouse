@@ -116,6 +116,7 @@ function sumarSaldo() {
   else {
     billeteraVirtual.saldo += parseInt(inputCargaSaldo.value);
     billeteraVirtual.utilizada = true;
+    console.log(billeteraVirtual);
     localStorage.setItem("billetera", JSON.stringify(billeteraVirtual));
   }
 }
@@ -137,6 +138,9 @@ btnSumarSaldo.addEventListener("click", () => {
 function verSaldo() {
   saldoDOM.innerHTML = `
   ${billeteraVirtual.saldo}`;
+  if (!localStorage.getItem("billetera")) {
+    localStorage.setItem("billetera", JSON.stringify(billeteraVirtual));
+  }
 }
 
 verSaldo();
@@ -274,7 +278,6 @@ function recuperarDatosStorage() {
     billeteraVirtual = billetera;
     verSaldo();
   }
-  console.log(billetera);
 }
 
 recuperarDatosStorage();
@@ -282,29 +285,34 @@ recuperarDatosStorage();
 //////////////////////////////////////////////
 
 function viajar(viaje) {
-  if (
-    billeteraVirtual.saldo >= viaje.costo &&
-    puntoDePartida.destino != viaje.destino
-  ) {
-    puntoDePartida = viaje;
-    billeteraVirtual.saldo -= viaje.costo;
-    viajesRealizados.push(viaje);
-
-    gastoEnViajes = gastoEnViajes += viaje.costo;
-    destinoProximo = null;
-    dondeVoy();
-    dondeEstoy();
-    verSaldo();
-    cardsViajes(filtrarViajes(), vuelos);
-
-    alert(
-      "gracias por el viaje le quedan $" +
-        billeteraVirtual.saldo +
-        " en su billetera virtual"
-    );
-    alert("ahora te encuentras en " + puntoDePartida.destino);
+  if (viaje == null) {
+    alert("elija un destino");
   } else {
-    alert("no cuenta con el cinero suficiente");
+    if (
+      billeteraVirtual.saldo >= viaje.costo &&
+      puntoDePartida.destino != viaje.destino
+    ) {
+      puntoDePartida = viaje;
+      billeteraVirtual.saldo -= viaje.costo;
+      viajesRealizados.push(viaje);
+
+      gastoEnViajes = gastoEnViajes += viaje.costo;
+      destinoProximo = null;
+      dondeVoy();
+      dondeEstoy();
+      verSaldo();
+      cardsViajes(filtrarViajes(), vuelos);
+      localStorage.setItem("billetera", JSON.stringify(billeteraVirtual));
+
+      alert(
+        "gracias por el viaje le quedan $" +
+          billeteraVirtual.saldo +
+          " en su billetera virtual"
+      );
+      alert("ahora te encuentras en " + puntoDePartida.destino);
+    } else {
+      alert("no cuenta con el cinero suficiente");
+    }
   }
 }
 
