@@ -11,35 +11,83 @@
     />
     <title>Document</title>
   </head>
-  <body class="container">
-    <header class="row bg-success">
-      <div class="col-md-3 bg-primary" id="ubicacion"></div>
-      <div class="col-md-3 bg-danger">
+  <body class="container bg-dark">
+    <header class="row bg-warning rounded p-3">
+      <div class="col-md-3">
+        <div id="ubicacion"></div>
+        <button id="btnVuelosRealizados" class="btn btn-dark">
+          ver vuelos realizados
+        </button>
+      </div>
+      <div class="col-md-3">
         <div>
-          <p id="saldo"></p>
+          <p id="saldo" class="display-6"></p>
 
-          <input type="number" id="input__sumarSaldo" />
-          <button id="btn__sumarSaldo">+</button>
+          <div class="input-group mb-3">
+            <button
+              class="btn btn-outline-dark"
+              type="button"
+              id="btn__sumarSaldo"
+            >
+              +
+            </button>
+            <input
+              id="input__sumarSaldo"
+              type="number"
+              class="form-control border-dark"
+              placeholder=""
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1"
+            />
+          </div>
         </div>
       </div>
-      <div class="col-md-6 bg-warning">
-        <div>
-          <button id="btn__disponibles">disponibles billetera</button>
-          <button id="btn__viajesTodos">todos los viajes</button>
-          <button id="btn__ordenarPrecio">ordenar por precio</button>
-          <select name="" id="select__precio">
+      <div
+        class="col-md-6 d-flex align-items-center justify-content-center flex-column"
+      >
+        <div class="input-group w-100">
+          <button
+            class="btn btn-outline-dark"
+            type="button"
+            id="btn__ordenarPrecio"
+          >
+            ordenar por precio
+          </button>
+          <select
+            class="form-select border-dark"
+            aria-label="Default select example"
+            id="select__precio"
+          >
             <option selected disabled>seleccione un orden</option>
             <option value="precioMasBajo">precio mas bajo</option>
             <option value="precioMasAlto">precio mas alto</option>
           </select>
         </div>
+        <div class="row w-100 mt-2">
+          <div class="col-md-6 p-0 pe-1">
+            <button class="btn btn-dark w-100" id="btn__disponibles">
+              disponibles billetera
+            </button>
+          </div>
+          <div class="col-md-6 p-0 ps-1">
+            <button class="btn btn-dark w-100" id="btn__viajesTodos">
+              todos los viajes
+            </button>
+          </div>
+        </div>
       </div>
     </header>
-    <main class="row bg-success mt-4">
-      <div id="vuelos"></div>
-      <div id="destino"></div>
-      <button id="viajar">viajar</button>
-      <button id="btnVuelosRealizados">ver vuelos realizados</button>
+    <main class="row mt-4">
+      <div class="col-md-5 p-0 pe-4" id="vuelos"></div>
+      <div class="col-md-7 bg-warning rounded p-4 mb-2">
+        <div class="row">
+          <div class="col-md-8" id="destino"></div>
+          <div class="col-md-4">
+            <button class="btn btn-dark btn-lg" id="viajar">viajar</button>
+          </div>
+        </div>
+        <div id="vuelosRealizadosContainer"></div>
+      </div>
     </main>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

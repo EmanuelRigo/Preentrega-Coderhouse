@@ -73,6 +73,9 @@ const selectPrecio = document.getElementById("select__precio");
 const inputCargaSaldo = document.getElementById("input__sumarSaldo");
 const vuelos = document.getElementById("vuelos");
 const destinoDom = document.getElementById("destino");
+const vuelosRealizadosContainer = document.getElementById(
+  "vuelosRealizadosContainer"
+);
 
 let billeteraVirtual = {
   saldo: 2000,
@@ -89,10 +92,6 @@ let puntoDePartida = {
   duracion: "7 días",
   costo: 2000,
 };
-
-/* alert(
-  "bienvenido a un viaje en avion usaremos una billetera virtual para viajar, el punto de partida es Buenos Aires"
-); */
 
 //////////////////////////////////////////////
 ////////////Funciones para la tercer Preentrega/////////////
@@ -137,7 +136,7 @@ btnSumarSaldo.addEventListener("click", () => {
 
 function verSaldo() {
   saldoDOM.innerHTML = `
-  ${billeteraVirtual.saldo}`;
+  $${billeteraVirtual.saldo}`;
   if (!localStorage.getItem("billetera")) {
     localStorage.setItem("billetera", JSON.stringify(billeteraVirtual));
   }
@@ -153,10 +152,12 @@ function cardsViajes(array, container) {
   container.innerHTML = "";
   for (item of array) {
     let card = document.createElement("div");
-    card.className = "card__viaje";
+    card.className =
+      "d-flex rounded border border-warning p-2 text-warning align-items-center justify-content-between mb-2 ";
     card.id = item.id;
-    card.innerHTML = `<button class="btn__viaje" id=${item.id}>${item.destino}</button> <p>$
-    ${item.costo}</p>`;
+    card.innerHTML = `<p class="m-0">${item.destino}  $${item.costo}</p>
+
+    <button type="button" id=${item.id} class="btn btn-warning btn__viaje">seleccionar</button>`;
     container.appendChild(card);
   }
 
@@ -251,20 +252,30 @@ btnOrdenarViajes.addEventListener("click", () => {
 
 function verViajesRealizados() {
   if (viajesRealizados.length == 0) {
-    vuelos.innerHTML = "";
-    vuelos.innerHTML = "<p>todavia no se han realizados vuelos</p>";
+    vuelosRealizadosContainer.innerHTML = "";
+    vuelosRealizadosContainer.innerHTML =
+      "<p>todavia no se han realizados vuelos</p>";
   } else {
     let costoTotal = viajesRealizados.reduce((acumulador, viaje) => {
       return acumulador + viaje.costo;
     }, 0);
 
-    cardsViajes(viajesRealizados, vuelos);
-    let divcard = document.createElement("div");
-    divcard.innerHTML = "";
+    cardsViajes(viajesRealizados, vuelosRealizadosContainer);
 
-    divcard.innerHTML = `<p>gastos en viajes${costoTotal}</p>`;
+    vuelosRealizadosContainer.innerHTML = "";
+    for (item of viajesRealizados) {
+      let card = document.createElement("div");
+      card.className =
+        "d-flex rounded border border-dark p-2 text-dark align-items-center justify-content-between mb-2";
+      card.innerHTML = `<p class="m-0">${item.destino}  $${item.costo}</p>`;
+      vuelosRealizadosContainer.appendChild(card);
+    }
 
-    vuelos.appendChild(divcard);
+    let gastos = document.createElement("div");
+    gastos.innerHTML = "";
+    gastos.innerHTML = `<p class="fs-3">gastos en viajes $${costoTotal}</p>`;
+
+    vuelosRealizadosContainer.appendChild(gastos);
   }
 }
 
@@ -277,6 +288,13 @@ function recuperarDatosStorage() {
   if (billetera.utilizada == true) {
     billeteraVirtual = billetera;
     verSaldo();
+  }
+
+  if (!JSON.parse(localStorage.getItem("puntoDePartida"))) {
+    localStorage.setItem("puntoDePartida", JSON.stringify(puntoDePartida));
+  } else {
+    puntoDePartida = JSON.parse(localStorage.getItem("puntoDePartida"));
+    dondeEstoy();
   }
 }
 
@@ -293,11 +311,13 @@ function viajar(viaje) {
       puntoDePartida.destino != viaje.destino
     ) {
       puntoDePartida = viaje;
+
       billeteraVirtual.saldo -= viaje.costo;
       viajesRealizados.push(viaje);
 
       gastoEnViajes = gastoEnViajes += viaje.costo;
       destinoProximo = null;
+      localStorage.setItem("puntoDePartida", JSON.stringify(puntoDePartida));
       dondeVoy();
       dondeEstoy();
       verSaldo();
@@ -315,124 +335,3 @@ function viajar(viaje) {
     }
   }
 }
-
-/* function opciones() {
-  let opcion1 = parseInt(prompt("desea hacer algo mas? \n -1 si \n -2 no"));
-  if (opcion1 == 2) {
-    alert("que tenga un buen dia");
-    opcion = false;
-  } else if (opcion1 == 1) {
-    alert("ok prosigamos");
-  } else {
-    alert("por favor elijar una opcion correcta");
-  }
-}
-
-do {
-  let primerOpcion = parseInt(
-    prompt(
-      "que desea hacer? \n -1 sumar dinero para viajes \n -2 viajar \n -3 ver dinero \n -4 ver destinos a los que puedo viajar segun mi billetera \n -5 ver los vuelos segun su precio \n -6 ver cuanto voy gastado en viajes \n -7 ver los viajes realizados"
-    )
-  );
-  switch (primerOpcion) {
-    case 1:
-      const carga = parseInt(prompt("cuanto dinero quiere cargar?"));
-
-      //aca investigue como poner para que no se puedan poner numero 'isNaN'
-
-      if (isNaN(carga) || carga <= 0) {
-        alert("por favor agregue solo numeros mayor a 0");
-        opciones();
-      } else {
-        billeteraVirtual += carga;
-        alert("tu saldo es $" + billeteraVirtual);
-        opciones();
-      }
-      break;
-    case 2:
-      let filtroViajes = viajes.filter(
-        (viaje) => viaje.destino != puntoDePartida.destino
-      );
-      let opcionesDeVuelo = "Seleccione una opción:\n";
-      filtroViajes.forEach((viaje, index) => {
-        opcionesDeVuelo += `${index + 1}. ${viaje.destino} $${viaje.costo}\n`;
-      });
-
-      let destino = parseInt(prompt(opcionesDeVuelo));
-      viajar(filtroViajes[destino - 1]);
-
-      opciones();
-      break;
-    case 3:
-      alert("el saldo de tu billetera virtual es $" + billeteraVirtual);
-      opciones();
-      break;
-    case 4:
-      let viajesPosibles = viajes.filter((viaje) => {
-        return (
-          viaje.costo <= billeteraVirtual &&
-          viaje.destino != puntoDePartida.destino
-        );
-      });
-
-      if (viajesPosibles.length == 0) {
-        alert("no hay viajes posibles con el saldo de tu billetera");
-      } else {
-        let alertViajes = "Puedes viajar a :\n";
-        viajesPosibles.forEach((viaje) => {
-          alertViajes += ` ${viaje.destino} $${viaje.costo}\n`;
-        });
-
-        alert(alertViajes);
-      }
-
-      opciones();
-      break;
-    case 5:
-      let viajesOrdenados = viajes.sort((viaje1, viaje2) => {
-        return viaje1.costo - viaje2.costo;
-      });
-
-      let alertViajes2 = "Aqui hay una lista de todos los viajes ordenados :\n";
-      viajesOrdenados.forEach((viaje) => {
-        alertViajes2 += ` ${viaje.destino} $${viaje.costo}\n`;
-      });
-
-      alert(alertViajes2);
-      opciones();
-      break;
-    case 6:
-      if (gastoEnViajes == 0) {
-        alert("todavia no gastaste naada");
-      } else {
-        alert(`vas gastando en viajes $${gastoEnViajes}`);
-      }
-      opciones();
-      break;
-    case 7:
-      if (viajesRealizados.length == 0) {
-        alert("todavia no realizaste viajes");
-      } else {
-        let costoTotal = viajesRealizados.reduce((acumulador, viaje) => {
-          return acumulador + viaje.costo;
-        }, 0);
-        let alertViajes3 =
-          "Aqui hay una lista de todos los viajes realizados :\n";
-        viajesRealizados.forEach((viaje, index) => {
-          alertViajes3 += `${index + 1}  ${viaje.destino} $${viaje.costo}\n`;
-        });
-
-        alert(alertViajes3);
-        alert("El total de lo gastado en todos los viajes fue $" + costoTotal);
-      }
-
-      opciones();
-      break;
-
-    default:
-      alert("elija una opcion de entre las dadas");
-      opciones();
-      break;
-  }
-} while (opcion);
- */
