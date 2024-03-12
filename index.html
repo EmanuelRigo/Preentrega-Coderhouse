@@ -9,86 +9,94 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="style.css" />
     <title>Document</title>
   </head>
-  <body class="container bg-dark">
-    <header class="row bg-warning rounded p-3">
-      <div class="col-md-3">
-        <div id="ubicacion"></div>
-        <button id="btnVuelosRealizados" class="btn btn-dark">
-          ver vuelos realizados
-        </button>
-      </div>
-      <div class="col-md-3">
-        <div>
-          <p id="saldo" class="display-6"></p>
+  <body class="bg-dark">
+    <div class="container h-100 d-md-flex flex-column justify-content-center">
+      <header class="row bg-warning rounded p-3">
+        <div class="col-md-3">
+          <div id="ubicacion"></div>
+          <button id="btnVuelosRealizados" class="btn btn-dark">
+            ver vuelos realizados
+          </button>
+        </div>
+        <div class="col-md-3">
+          <div>
+            <p id="saldo" class="display-6"></p>
 
-          <div class="input-group mb-3">
+            <div class="input-group mb-3">
+              <button
+                class="btn btn-outline-dark"
+                type="button"
+                id="btn__sumarSaldo"
+              >
+                +
+              </button>
+              <input
+                id="input__sumarSaldo"
+                type="number"
+                class="form-control border-dark"
+                placeholder=""
+                aria-label="Example text with button addon"
+                aria-describedby="button-addon1"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="col-md-6 d-flex align-items-center justify-content-center flex-column"
+        >
+          <div class="input-group w-100">
             <button
               class="btn btn-outline-dark"
               type="button"
-              id="btn__sumarSaldo"
+              id="btn__ordenarPrecio"
             >
-              +
+              ordenar por precio
             </button>
-            <input
-              id="input__sumarSaldo"
-              type="number"
-              class="form-control border-dark"
-              placeholder=""
-              aria-label="Example text with button addon"
-              aria-describedby="button-addon1"
-            />
+            <select
+              class="form-select border-dark"
+              aria-label="Default select example"
+              id="select__precio"
+            >
+              <option selected disabled>seleccione un orden</option>
+              <option value="precioMasBajo">precio mas bajo</option>
+              <option value="precioMasAlto">precio mas alto</option>
+            </select>
+          </div>
+          <div class="row w-100 mt-2">
+            <div class="col-md-6 p-0 pe-1">
+              <button class="btn btn-dark w-100" id="btn__disponibles">
+                disponibles billetera
+              </button>
+            </div>
+            <div class="col-md-6 p-0 ps-1">
+              <button class="btn btn-dark w-100" id="btn__viajesTodos">
+                todos los viajes
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <div
-        class="col-md-6 d-flex align-items-center justify-content-center flex-column"
-      >
-        <div class="input-group w-100">
-          <button
-            class="btn btn-outline-dark"
-            type="button"
-            id="btn__ordenarPrecio"
-          >
-            ordenar por precio
-          </button>
-          <select
-            class="form-select border-dark"
-            aria-label="Default select example"
-            id="select__precio"
-          >
-            <option selected disabled>seleccione un orden</option>
-            <option value="precioMasBajo">precio mas bajo</option>
-            <option value="precioMasAlto">precio mas alto</option>
-          </select>
-        </div>
-        <div class="row w-100 mt-2">
-          <div class="col-md-6 p-0 pe-1">
-            <button class="btn btn-dark w-100" id="btn__disponibles">
-              disponibles billetera
-            </button>
+      </header>
+      <main class="row mt-4">
+        <div class="col-md-5 p-0 pe-4" id="vuelos"></div>
+        <div class="col-md-7 bg-warning rounded p-4 mb-2">
+          <div class="row m-0 mb-4 border border-4 border-dark rounded py-2">
+            <div class="col-md-8" id="destino"></div>
+            <div class="col-md-4 px-2">
+              <button
+                class="btn btn-dark btn-lg fs-3 btn-lg h-100 w-100"
+                id="viajar"
+              >
+                viajar
+              </button>
+            </div>
           </div>
-          <div class="col-md-6 p-0 ps-1">
-            <button class="btn btn-dark w-100" id="btn__viajesTodos">
-              todos los viajes
-            </button>
-          </div>
+          <div id="vuelosRealizadosContainer"></div>
         </div>
-      </div>
-    </header>
-    <main class="row mt-4">
-      <div class="col-md-5 p-0 pe-4" id="vuelos"></div>
-      <div class="col-md-7 bg-warning rounded p-4 mb-2">
-        <div class="row">
-          <div class="col-md-8" id="destino"></div>
-          <div class="col-md-4">
-            <button class="btn btn-dark btn-lg" id="viajar">viajar</button>
-          </div>
-        </div>
-        <div id="vuelosRealizadosContainer"></div>
-      </div>
-    </main>
+      </main>
+    </div>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

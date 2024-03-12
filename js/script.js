@@ -102,8 +102,8 @@ function dondeEstoy() {
   const div = document.createElement("div");
 
   div.innerHTML = `
-  <h3>ubicacion</h3>
-  <p>${puntoDePartida.destino}</p>`;
+  <h3>Ubicacion</h3>
+  <p class="fs-5 ">${puntoDePartida.destino}</p>`;
 
   ubicacionActual.appendChild(div);
 }
@@ -115,7 +115,7 @@ function sumarSaldo() {
   else {
     billeteraVirtual.saldo += parseInt(inputCargaSaldo.value);
     billeteraVirtual.utilizada = true;
-    console.log(billeteraVirtual);
+
     localStorage.setItem("billetera", JSON.stringify(billeteraVirtual));
   }
 }
@@ -168,14 +168,11 @@ function cardsViajes(array, container) {
       destinoProximo = viajes.find((viaje) => {
         return parseInt(btnViaje.id) === viaje.id;
       });
-      console.log(destino);
+
       dondeVoy();
-      console.log(destinoProximo);
     });
   });
 }
-
-cardsViajes(filtrarViajes(), vuelos);
 
 function dondeVoy() {
   destinoDom.innerHTML = "";
@@ -183,12 +180,12 @@ function dondeVoy() {
 
   if (destinoProximo) {
     div.innerHTML = `
-  <h3>destino</h3>
-  <p>${destinoProximo.destino}</p>`;
+  <h3 class="display-6">Destino</h3>
+  <p class="fs-5 mb-1">${destinoProximo.destino} - $${destinoProximo.costo}</p>`;
   } else {
     div.innerHTML = `
-  <h3>destino</h3>
-  <p>no hay destino</p>`;
+  <h3 class="display-6">Destino</h3>
+  <p class="fs-5 mb-1">no hay destino</p>`;
   }
 
   destinoDom.appendChild(div);
@@ -210,16 +207,13 @@ function viajesDisponible() {
     );
   });
 
-  console.log(viajesPosibles);
-
   if (viajesPosibles.length == 0) {
     vuelos.innerHTML = "";
     let card = document.createElement("div");
-    card.innerHTML = "<p>no hay viajes disponibles con tu saldo actual</p>";
+    card.innerHTML = `<p class="text-warning fs-4">no hay viajes disponibles con tu saldo actual</p>`;
+    vuelos.appendChild(card);
   } else {
     vuelos.innerHTML = "";
-    console.log(viajesDisponible);
-
     cardsViajes(viajesPosibles, vuelos);
   }
 }
@@ -229,19 +223,17 @@ btnViajesDisponibles.addEventListener("click", () => {
 });
 
 btnViajesTodos.addEventListener("click", () => {
-  cardsViajes(viajes, vuelos);
+  cardsViajes(filtrarViajes(), vuelos);
 });
 
 function ordenarViajes() {
-  let viajesOrdenados = viajes.sort((viaje1, viaje2) => {
+  let viajesOrdenados = filtrarViajes().sort((viaje1, viaje2) => {
     if (selectPrecio.value == "precioMasBajo") {
       return viaje1.costo - viaje2.costo;
     } else if (selectPrecio.value == "precioMasAlto") {
       return viaje2.costo - viaje1.costo;
     }
   });
-  console.log(selectPrecio.value);
-  console.log(viajesOrdenados);
 
   cardsViajes(viajesOrdenados, vuelos);
 }
@@ -253,8 +245,7 @@ btnOrdenarViajes.addEventListener("click", () => {
 function verViajesRealizados() {
   if (viajesRealizados.length == 0) {
     vuelosRealizadosContainer.innerHTML = "";
-    vuelosRealizadosContainer.innerHTML =
-      "<p>todavia no se han realizados vuelos</p>";
+    vuelosRealizadosContainer.innerHTML = `<p class="fs-4">todavia no se han realizados vuelos</p>`;
   } else {
     let costoTotal = viajesRealizados.reduce((acumulador, viaje) => {
       return acumulador + viaje.costo;
@@ -273,7 +264,7 @@ function verViajesRealizados() {
 
     let gastos = document.createElement("div");
     gastos.innerHTML = "";
-    gastos.innerHTML = `<p class="fs-3">gastos en viajes $${costoTotal}</p>`;
+    gastos.innerHTML = `<p class="fs-4">gastos en viajes $${costoTotal}</p>`;
 
     vuelosRealizadosContainer.appendChild(gastos);
   }
@@ -296,6 +287,8 @@ function recuperarDatosStorage() {
     puntoDePartida = JSON.parse(localStorage.getItem("puntoDePartida"));
     dondeEstoy();
   }
+
+  cardsViajes(filtrarViajes(), vuelos);
 }
 
 recuperarDatosStorage();
@@ -324,11 +317,6 @@ function viajar(viaje) {
       cardsViajes(filtrarViajes(), vuelos);
       localStorage.setItem("billetera", JSON.stringify(billeteraVirtual));
 
-      alert(
-        "gracias por el viaje le quedan $" +
-          billeteraVirtual.saldo +
-          " en su billetera virtual"
-      );
       alert("ahora te encuentras en " + puntoDePartida.destino);
     } else {
       alert("no cuenta con el cinero suficiente");
