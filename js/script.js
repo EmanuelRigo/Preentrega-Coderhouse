@@ -1,65 +1,4 @@
-let viajes = [
-  {
-    id: 1001,
-    destino: "París, Francia",
-    duracion: 7,
-    costo: 1500,
-  },
-  {
-    id: 1002,
-    destino: "Tokio, Japón",
-    duracion: 10,
-    costo: 2500,
-  },
-  {
-    id: 1003,
-    destino: "Roma, Italia",
-    duracion: 5,
-    costo: 1200,
-  },
-  {
-    id: 1004,
-    destino: "Nueva York, EE. UU.",
-    duracion: 6,
-    costo: 1800,
-  },
-  {
-    id: 1005,
-    destino: "Sídney, Australia",
-    duracion: 8,
-    costo: 2200,
-  },
-  {
-    id: 1006,
-    destino: "Barcelona, España",
-    duracion: 4,
-    costo: 1000,
-  },
-  {
-    id: 1007,
-    destino: "Machu Picchu, Perú",
-    duracion: 3,
-    costo: 800,
-  },
-  {
-    id: 1008,
-    destino: "Ciudad del Cabo, Sudáfrica",
-    duracion: 9,
-    costo: 2800,
-  },
-  {
-    id: 1009,
-    destino: "Bangkok, Tailandia",
-    duracion: 7,
-    costo: 2700,
-  },
-  {
-    id: 1010,
-    destino: "Buenos Aires, Argentina",
-    duracion: 7,
-    costo: 2000,
-  },
-];
+let viajes = [];
 
 const ubicacionActual = document.getElementById("ubicacion");
 const saldoDOM = document.getElementById("saldo");
@@ -93,6 +32,44 @@ let puntoDePartida = {
   costo: 2000,
 };
 
+async function consumirData(url) {
+  try {
+    const respuesta = await fetch(url);
+    const data = await respuesta.json();
+    return data;
+  } catch {
+    Toastify({
+      text: "algo salio mal",
+      duration: 4500,
+      className: "info",
+      style: {
+        background: "red",
+      },
+    }).showToast();
+  }
+}
+
+async function traerData() {
+  await consumirData("./js/viajes.json")
+    .then((res) => {
+      viajes.push(...res);
+      cardsViajes(filtrarViajes(), vuelos);
+    })
+    .catch(() => {
+      Toastify({
+        text: "no hay sistema",
+        duration: 4500,
+        className: "info",
+        style: {
+          background: "red",
+        },
+      }).showToast();
+      vuelos.innerHTML = `<p class="fs-3 text-danger">no hay sistema</p>`;
+    });
+}
+
+traerData();
+
 //////////////////////////////////////////////
 ////////////Funciones para la tercer Preentrega/////////////
 //////////////////////////////////////////////
@@ -111,8 +88,16 @@ function dondeEstoy() {
 dondeEstoy();
 
 function sumarSaldo() {
-  if (inputCargaSaldo.value <= 0) alert("por favor numeros mayores a 0");
-  else {
+  if (inputCargaSaldo.value <= 0) {
+    Toastify({
+      text: "elija un monto mayor a 0",
+      duration: 4500,
+      className: "info",
+      style: {
+        background: "red",
+      },
+    }).showToast();
+  } else {
     billeteraVirtual.saldo += parseInt(inputCargaSaldo.value);
     billeteraVirtual.utilizada = true;
 
@@ -287,8 +272,6 @@ function recuperarDatosStorage() {
     puntoDePartida = JSON.parse(localStorage.getItem("puntoDePartida"));
     dondeEstoy();
   }
-
-  cardsViajes(filtrarViajes(), vuelos);
 }
 
 recuperarDatosStorage();
@@ -297,7 +280,14 @@ recuperarDatosStorage();
 
 function viajar(viaje) {
   if (viaje == null) {
-    alert("elija un destino");
+    Toastify({
+      text: "elija un destino",
+      duration: 4500,
+      className: "info",
+      style: {
+        background: "red",
+      },
+    }).showToast();
   } else {
     if (
       billeteraVirtual.saldo >= viaje.costo &&
@@ -317,9 +307,26 @@ function viajar(viaje) {
       cardsViajes(filtrarViajes(), vuelos);
       localStorage.setItem("billetera", JSON.stringify(billeteraVirtual));
 
-      alert("ahora te encuentras en " + puntoDePartida.destino);
+      Toastify({
+        style: {
+          background: "#ffc107",
+          color: "black",
+        },
+        text: `ahora te encuentras en ${puntoDePartida.destino}`,
+        offset: {
+          x: 50,
+          y: 10,
+        },
+      }).showToast();
     } else {
-      alert("no cuenta con el cinero suficiente");
+      Toastify({
+        text: "no tienes dinero suficiente",
+        duration: 4500,
+        className: "info",
+        style: {
+          background: "red",
+        },
+      }).showToast();
     }
   }
 }
