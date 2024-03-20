@@ -16,6 +16,10 @@ const destinoDom = document.getElementById("destino");
 const vuelosRealizadosContainer = document.getElementById(
   "vuelosRealizadosContainer"
 );
+const inputNombre = document.getElementById("inputNombre");
+const inputApellido = document.getElementById("inputApellido");
+const inputEmail = document.getElementById("inputEmail");
+const selectOrigen = document.getElementById("selectOrigen");
 
 let billeteraVirtual = {
   saldo: 2000,
@@ -162,14 +166,11 @@ function cardsViajes(array, container) {
   });
 }
 
-const selectOptions = document.getElementById("validationServer04");
-
 function optionsSelect() {
-  //selectOptions.innerHTML = "";
   for (item of viajes) {
     let option = document.createElement("option");
-    option.innerHTML = `<option value=${item.id} class="m-0">${item.destino}  $${item.costo}</option>`;
-    selectOptions.appendChild(option);
+    option.innerHTML = `<option value=${item.id} class="m-0">${item.destino}</option>`;
+    selectOrigen.appendChild(option);
   }
 }
 
@@ -182,7 +183,7 @@ function dondeVoy() {
   } else {
     div.innerHTML = `
 
-  <p class="fs-5 mb-1">no hay destino</p>`;
+  <p class="fs-5 mb-1 ">no hay destino</p>`;
   }
 
   destinoDom.appendChild(div);
@@ -298,14 +299,45 @@ class Boleto {
 
 btnComprarBoleto.addEventListener("click", (e) => {
   e.preventDefault();
+
   let boletoNuevo = new Boleto(
-    "pedro",
-    "pepe",
-    "pepe@gmail",
-    "bsas",
-    "cordoba"
+    inputNombre.value,
+    inputApellido.value,
+    inputEmail.value,
+    selectOrigen.value,
+    destinoProximo
   );
-  boletosArray.push(boletoNuevo);
+
+  if (
+    inputNombre.value == "" ||
+    inputApellido.value == "" ||
+    inputEmail.value == "" ||
+    selectOrigen.value == "" ||
+    destinoProximo == null
+  ) {
+    Toastify({
+      text: "llene todos los capos o elija un destino",
+      duration: 4500,
+      className: "info",
+      style: {
+        background: "red",
+      },
+    }).showToast();
+  } else if (billeteraVirtual.saldo < destinoProximo.costo) {
+    Toastify({
+      text: "dinero insuficiente",
+      duration: 4500,
+      className: "info",
+      style: {
+        background: "red",
+      },
+    }).showToast();
+  } else {
+    boletosArray.push(boletoNuevo);
+    billeteraVirtual.saldo -= destinoProximo.costo;
+    verSaldo();
+    console.log(boletosArray);
+  }
 });
 
 recuperarDatosStorage();
