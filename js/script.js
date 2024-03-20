@@ -8,6 +8,7 @@ const btnViajesTodos = document.getElementById("btn__viajesTodos");
 const btnOrdenarViajes = document.getElementById("btn__ordenarPrecio");
 const btnViajar = document.getElementById("viajar");
 const btnVuelosRealizados = document.getElementById("btnVuelosRealizados");
+const btnComprarBoleto = document.getElementById("btnComprarBoleto");
 const selectPrecio = document.getElementById("select__precio");
 const inputCargaSaldo = document.getElementById("input__sumarSaldo");
 const vuelos = document.getElementById("vuelos");
@@ -22,6 +23,7 @@ let billeteraVirtual = {
 };
 let gastoEnViajes = 0;
 let viajesRealizados = [];
+let boletosArray = [];
 let destinoProximo = null;
 
 let opcion = false;
@@ -54,6 +56,7 @@ async function traerData() {
     .then((res) => {
       viajes.push(...res);
       cardsViajes(filtrarViajes(), vuelos);
+      optionsSelect();
     })
     .catch(() => {
       Toastify({
@@ -159,17 +162,26 @@ function cardsViajes(array, container) {
   });
 }
 
+const selectOptions = document.getElementById("validationServer04");
+
+function optionsSelect() {
+  //selectOptions.innerHTML = "";
+  for (item of viajes) {
+    let option = document.createElement("option");
+    option.innerHTML = `<option value=${item.id} class="m-0">${item.destino}  $${item.costo}</option>`;
+    selectOptions.appendChild(option);
+  }
+}
+
 function dondeVoy() {
   destinoDom.innerHTML = "";
   const div = document.createElement("div");
 
   if (destinoProximo) {
-    div.innerHTML = `
-  <h3 class="display-6">Destino</h3>
-  <p class="fs-5 mb-1">${destinoProximo.destino} - $${destinoProximo.costo}</p>`;
+    div.innerHTML = `<p class="fs-5 mb-0">${destinoProximo.destino}</p><p class="fs-5 mb-0">$${destinoProximo.costo}</p>`;
   } else {
     div.innerHTML = `
-  <h3 class="display-6">Destino</h3>
+
   <p class="fs-5 mb-1">no hay destino</p>`;
   }
 
@@ -273,6 +285,28 @@ function recuperarDatosStorage() {
     dondeEstoy();
   }
 }
+
+class Boleto {
+  constructor(nombre, apellido, email, origen, destino) {
+    this.nombre = nombre;
+    this.apellido = apellido;
+    this.email = email;
+    this.origen = origen;
+    this.destino = destino;
+  }
+}
+
+btnComprarBoleto.addEventListener("click", (e) => {
+  e.preventDefault();
+  let boletoNuevo = new Boleto(
+    "pedro",
+    "pepe",
+    "pepe@gmail",
+    "bsas",
+    "cordoba"
+  );
+  boletosArray.push(boletoNuevo);
+});
 
 recuperarDatosStorage();
 

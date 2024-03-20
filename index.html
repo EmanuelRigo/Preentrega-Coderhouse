@@ -33,7 +33,7 @@
 
             <div class="input-group mb-3">
               <button
-                class="btn btn-outline-dark"
+                class="btn btn-outline-dark border-3 border-dark"
                 type="button"
                 id="btn__sumarSaldo"
               >
@@ -42,7 +42,7 @@
               <input
                 id="input__sumarSaldo"
                 type="number"
-                class="form-control border-dark"
+                class="form-control border-dark border-3 border-dark border-start-0"
                 placeholder=""
                 aria-label="Example text with button addon"
                 aria-describedby="button-addon1"
@@ -55,14 +55,14 @@
         >
           <div class="input-group w-100">
             <button
-              class="btn btn-outline-dark"
+              class="btn btn-outline-dark border-3 border-dark"
               type="button"
               id="btn__ordenarPrecio"
             >
               ordenar por precio
             </button>
             <select
-              class="form-select border-dark"
+              class="form-select border-3 border-dark border-start-0"
               aria-label="Default select example"
               id="select__precio"
             >
@@ -87,7 +87,74 @@
       </header>
       <main class="row mt-4">
         <div class="col-md-5 p-0 pe-4" id="vuelos"></div>
-        <div class="col-md-7 bg-warning rounded p-4 mb-2">
+        <div
+          class="col-md-7 bg-warning rounded p-4 mb-2 d-flex flex-column justify-content-between"
+        >
+          <form class="row g-3">
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control border border-3 border-dark"
+                  id="floatingInput"
+                  placeholder="nombre"
+                />
+                <label for="floatingInput">Nombre</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control border border-3 border-dark"
+                  id="floatingInput"
+                  placeholder="apellido"
+                />
+                <label for="floatingInput">Apellido</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input
+                  type="email"
+                  class="form-control border border-3 border-dark"
+                  id="floatingInput"
+                  placeholder="name@example.com"
+                />
+                <label for="floatingInput">e-mail</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating h-100">
+                <select
+                  class="form-select border border-3 border-dark h-100"
+                  id="validationServer04"
+                  aria-describedby="validationServer04Feedback"
+                  required
+                >
+                  <option selected disabled value="">...</option>
+                </select>
+                <label for="floatingInput">Desde</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row m-0 h-100 rounded border border-3 border-dark">
+                <div class="col-md-5 my-0">
+                  <p class="display-6 my-0">Destino:</p>
+                </div>
+                <div class="col-md-7 my-auto" id="destino"></div>
+              </div>
+            </div>
+            <div class="col-12 d-flex">
+              <button
+                class="btn btn-dark fs-3 w-100"
+                id="btnComprarBoleto"
+                type="submit"
+              >
+                Comprar Boleto
+              </button>
+            </div>
+          </form>
           <div class="row m-0 mb-4 border border-4 border-dark rounded py-2">
             <div class="col-md-8" id="destino"></div>
             <div class="col-md-4 px-2">
