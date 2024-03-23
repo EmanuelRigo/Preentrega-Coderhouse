@@ -1,14 +1,14 @@
-let viajes = [];
-
 const ubicacionActual = document.getElementById("ubicacion");
 const saldoDOM = document.getElementById("saldo");
 const btnSumarSaldo = document.getElementById("btn__sumarSaldo");
 const btnViajesDisponibles = document.getElementById("btn__disponibles");
 const btnViajesTodos = document.getElementById("btn__viajesTodos");
 const btnOrdenarViajes = document.getElementById("btn__ordenarPrecio");
-const btnViajar = document.getElementById("viajar");
+//const btnViajar = document.getElementById("viajar");
 const btnVuelosRealizados = document.getElementById("btnVuelosRealizados");
 const btnComprarBoleto = document.getElementById("btnComprarBoleto");
+const btnVerPasajes = document.getElementById("btnVerPasajes");
+const btnVolverPasajes = document.getElementById("btnVolverPasajes");
 const selectPrecio = document.getElementById("select__precio");
 const inputCargaSaldo = document.getElementById("input__sumarSaldo");
 const vuelos = document.getElementById("vuelos");
@@ -20,6 +20,21 @@ const inputNombre = document.getElementById("inputNombre");
 const inputApellido = document.getElementById("inputApellido");
 const inputEmail = document.getElementById("inputEmail");
 const selectOrigen = document.getElementById("selectOrigen");
+const formContainer = document.getElementById("formContainer");
+const pasajesContainer = document.getElementById("pasajesContainer");
+const pasajesDiv = document.getElementById("pasajesDiv");
+
+let viajes = [];
+
+class Boleto {
+  constructor(nombre, apellido, email, origen, destino) {
+    this.nombre = nombre;
+    this.apellido = apellido;
+    this.email = email;
+    this.origen = origen;
+    this.destino = destino;
+  }
+}
 
 let billeteraVirtual = {
   saldo: 2000,
@@ -174,6 +189,27 @@ function optionsSelect() {
   }
 }
 
+function cardsPasajes() {
+  pasajesDiv.innerHTML = "";
+  for (boleto of boletosArray) {
+    let card = document.createElement("div");
+    card.classList.add("bg-primary");
+    card.innerHTML = `nombre: ${boleto.nombre}`;
+    pasajesDiv.appendChild(card);
+  }
+}
+
+btnVerPasajes.addEventListener("click", () => {
+  cardsPasajes();
+  formContainer.classList.add("d-none");
+  pasajesContainer.classList.remove("d-none");
+});
+
+btnVolverPasajes.addEventListener("click", () => {
+  pasajesContainer.classList.add("d-none");
+  formContainer.classList.remove("d-none");
+});
+
 function dondeVoy() {
   destinoDom.innerHTML = "";
   const div = document.createElement("div");
@@ -191,11 +227,11 @@ function dondeVoy() {
 
 dondeVoy();
 
-btnViajar.addEventListener("click", () => {
+/* btnViajar.addEventListener("click", () => {
   viajar(destinoProximo);
 
   cardsViajes(filtrarViajes(), vuelos);
-});
+}); */
 
 function viajesDisponible() {
   let viajesPosibles = filtrarViajes().filter((viaje) => {
@@ -287,16 +323,6 @@ function recuperarDatosStorage() {
   }
 }
 
-class Boleto {
-  constructor(nombre, apellido, email, origen, destino) {
-    this.nombre = nombre;
-    this.apellido = apellido;
-    this.email = email;
-    this.origen = origen;
-    this.destino = destino;
-  }
-}
-
 btnComprarBoleto.addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -326,6 +352,15 @@ btnComprarBoleto.addEventListener("click", (e) => {
   } else if (billeteraVirtual.saldo < destinoProximo.costo) {
     Toastify({
       text: "dinero insuficiente",
+      duration: 4500,
+      className: "info",
+      style: {
+        background: "red",
+      },
+    }).showToast();
+  } else if (destinoProximo.destino == selectOrigen.value) {
+    Toastify({
+      text: "el destino debe ser diferente al origen",
       duration: 4500,
       className: "info",
       style: {

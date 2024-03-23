@@ -90,80 +90,100 @@
         <div
           class="col-md-7 bg-warning rounded p-4 mb-2 d-flex flex-column justify-content-between"
         >
-          <form class="row g-3">
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input
-                  type="text"
-                  class="form-control border border-3 border-dark"
-                  id="inputNombre"
-                  placeholder="nombre"
-                />
-                <label for="floatingInput">Nombre</label>
+          <div
+            id="formContainer"
+            class="h-100 d-flex flex-column justify-content-between"
+          >
+            <form class="row g-3">
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <input
+                    type="text"
+                    class="form-control border border-3 border-dark"
+                    id="inputNombre"
+                    placeholder="nombre"
+                  />
+                  <label for="floatingInput">Nombre</label>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input
-                  type="text"
-                  class="form-control border border-3 border-dark"
-                  id="inputApellido"
-                  placeholder="apellido"
-                />
-                <label for="floatingInput">Apellido</label>
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <input
+                    type="text"
+                    class="form-control border border-3 border-dark"
+                    id="inputApellido"
+                    placeholder="apellido"
+                  />
+                  <label for="floatingInput">Apellido</label>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input
-                  type="email"
-                  class="form-control border border-3 border-dark"
-                  id="inputEmail"
-                  placeholder="name@example.com"
-                />
-                <label for="floatingInput">e-mail</label>
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <input
+                    type="email"
+                    class="form-control border border-3 border-dark"
+                    id="inputEmail"
+                    placeholder="name@example.com"
+                  />
+                  <label for="floatingInput">e-mail</label>
+                </div>
               </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-floating h-100">
-                <select
-                  class="form-select border border-3 border-dark h-100"
-                  id="selectOrigen"
-                  aria-describedby="validationServer04Feedback"
-                  required
+              <div class="col-md-6">
+                <div class="form-floating h-100">
+                  <select
+                    class="form-select border border-3 border-dark h-100"
+                    id="selectOrigen"
+                    aria-describedby="validationServer04Feedback"
+                    required
+                  >
+                    <option selected disabled value="">...</option>
+                  </select>
+                  <label for="floatingInput">Desde</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="row m-0 h-100 rounded border border-3 border-dark">
+                  <div class="col-md-12 my-auto" id="destino"></div>
+                </div>
+              </div>
+              <div class="col-12 d-flex">
+                <button
+                  class="btn btn-dark fs-3 w-100"
+                  id="btnComprarBoleto"
+                  type="submit"
                 >
-                  <option selected disabled value="">...</option>
-                </select>
-                <label for="floatingInput">Desde</label>
+                  Comprar Boleto
+                </button>
               </div>
-            </div>
-            <div class="col-md-6">
-              <div class="row m-0 h-100 rounded border border-3 border-dark">
-                <div class="col-md-12 my-auto" id="destino"></div>
+            </form>
+            <div class="row m-0 border border-4 border-dark rounded py-2">
+              <div class="col-md-8">
+                <button
+                  class="btn btn-dark btn-lg fs-3 btn-lg"
+                  id="btnVerPasajes"
+                >
+                  ver pasajes
+                </button>
               </div>
-            </div>
-            <div class="col-12 d-flex">
-              <button
-                class="btn btn-dark fs-3 w-100"
-                id="btnComprarBoleto"
-                type="submit"
-              >
-                Comprar Boleto
-              </button>
-            </div>
-          </form>
-          <div class="row m-0 mb-4 border border-4 border-dark rounded py-2">
-            <div class="col-md-8" id="destino"></div>
-            <div class="col-md-4 px-2">
-              <button
-                class="btn btn-dark btn-lg fs-3 btn-lg h-100 w-100"
-                id="viajar"
-              >
-                viajar
-              </button>
             </div>
           </div>
-          <div id="vuelosRealizadosContainer"></div>
+          <div
+            id="pasajesContainer"
+            class="h-100 d-flex flex-column justify-content-between d-none"
+          >
+            <div id="pasajesDiv" class="col-md-12"></div>
+            <div class="row m-0 border border-4 border-dark rounded py-2">
+              <div class="col-md-4">
+                <button
+                  class="col btn btn-dark btn-lg fs-3 btn-lg"
+                  id="btnVolverPasajes"
+                >
+                  volver
+                </button>
+              </div>
+            </div>
+          </div>
+          <div id="vuelosRealizadosContainer" class="d-none">hola</div>
         </div>
       </main>
     </div>
