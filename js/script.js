@@ -20,9 +20,9 @@ const inputNombre = document.getElementById("inputNombre");
 const inputApellido = document.getElementById("inputApellido");
 const inputEmail = document.getElementById("inputEmail");
 const selectOrigen = document.getElementById("selectOrigen");
-const formContainer = document.getElementById("formContainer");
-const pasajesContainer = document.getElementById("pasajesContainer");
 const pasajesDiv = document.getElementById("pasajesDiv");
+const rowViajesContainer = document.getElementById("rowViajesContainer");
+const rowPasajesContainer = document.getElementById("rowPasajesContainer");
 
 let viajes = [];
 
@@ -191,23 +191,61 @@ function optionsSelect() {
 
 function cardsPasajes() {
   pasajesDiv.innerHTML = "";
-  for (boleto of boletosArray) {
+
+  if (boletosArray.length == 0) {
     let card = document.createElement("div");
-    card.classList.add("bg-primary");
-    card.innerHTML = `nombre: ${boleto.nombre}`;
+    card.classList.add(
+      "row",
+      "rounded",
+      "bg-dark",
+      "text-warning",
+      "p-3",
+      "mb-3"
+    );
+    card.innerHTML = ` <p class="fs-3 m-0">no hay pasajes comprados todavia</p>`;
     pasajesDiv.appendChild(card);
+  } else {
+    for (boleto of boletosArray) {
+      let card = document.createElement("div");
+      card.classList.add(
+        "row",
+        "rounded",
+        "bg-dark",
+        "text-warning",
+        "p-3",
+        "mb-3"
+      );
+      card.innerHTML = `    <div class="col-md-4">
+    <p class="fs-5">${boleto.nombre} ${boleto.apellido}</p>
+    <p class="fs-5">$${boleto.destino.costo}</p>
+    <p class="fs-5">hora"12:30"</p>
+  </div>
+  <div class="col-md-5">
+    <p class="fs-5">Desde: ${boleto.origen}</p>
+    <p class="fs-5">Hacias: ${boleto.destino.destino}</p>
+  </div>
+  <div class="col-md-3">
+    <button class="fs-4 btn btn-outline-warning">viajar</button>
+  </div>`;
+
+      pasajesDiv.appendChild(card);
+    }
   }
 }
 
 btnVerPasajes.addEventListener("click", () => {
   cardsPasajes();
-  formContainer.classList.add("d-none");
-  pasajesContainer.classList.remove("d-none");
+  rowPasajesContainer.classList.remove("d-none");
+  rowViajesContainer.classList.add("d-none");
+  btnViajesDisponibles.classList.add("disabled");
+  btnViajesTodos.classList.add("disabled");
 });
 
 btnVolverPasajes.addEventListener("click", () => {
-  pasajesContainer.classList.add("d-none");
-  formContainer.classList.remove("d-none");
+  rowPasajesContainer.classList.add("d-none");
+  rowViajesContainer.classList.remove("d-none");
+  btnViajesDisponibles.classList.remove("disabled");
+  btnViajesTodos.classList.remove("disabled");
 });
 
 function dondeVoy() {
