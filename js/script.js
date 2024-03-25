@@ -27,12 +27,13 @@ const rowPasajesContainer = document.getElementById("rowPasajesContainer");
 let viajes = [];
 
 class Boleto {
-  constructor(nombre, apellido, email, origen, destino) {
+  constructor(nombre, apellido, email, origen, destino, id) {
     this.nombre = nombre;
     this.apellido = apellido;
     this.email = email;
     this.origen = origen;
     this.destino = destino;
+    this.id = id;
   }
 }
 
@@ -149,6 +150,31 @@ function verSaldo() {
   }
 }
 
+//esta funcion la copie para generar un id
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return (
+    s4() +
+    s4() +
+    "-" +
+    s4() +
+    "-" +
+    s4() +
+    "-" +
+    s4() +
+    "-" +
+    s4() +
+    s4() +
+    s4()
+  );
+}
+
+////////////////////////////////////////
+
 verSaldo();
 
 function filtrarViajes() {
@@ -222,14 +248,40 @@ function cardsPasajes() {
   </div>
   <div class="col-md-5">
     <p class="fs-5">Desde: ${boleto.origen}</p>
-    <p class="fs-5">Hacias: ${boleto.destino.destino}</p>
+    <p class="fs-5">Hacia: ${boleto.destino.destino}</p>
+    <p class="fs-5">ID: ${boleto.id}</p>
   </div>
   <div class="col-md-3">
-    <button class="fs-4 btn btn-outline-warning">viajar</button>
+    <button id=${boleto.id} class="fs-4 btn btn-outline-warning btnViajar">viajar</button>
   </div>`;
 
       pasajesDiv.appendChild(card);
     }
+    const btnsViajar = document.querySelectorAll(".btnViajar");
+
+    btnsViajar.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (puntoDePartida.destino === boleto.destino.destino) {
+          console.log(puntoDePartida.destino);
+          console.log(boleto.destino.destino);
+          Toastify({
+            text: `ya te encuentras en ${puntoDePartida.destino}`,
+            duration: 4500,
+            className: "info",
+            style: {
+              background: "red",
+            },
+          }).showToast();
+        } else {
+          viajar(boleto.destino);
+          boletosArray = boletosArray.filter((boleto) => {
+            return boleto.id !== btn.id;
+          });
+
+          cardsPasajes();
+        }
+      });
+    });
   }
 }
 
@@ -369,7 +421,8 @@ btnComprarBoleto.addEventListener("click", (e) => {
     inputApellido.value,
     inputEmail.value,
     selectOrigen.value,
-    destinoProximo
+    destinoProximo,
+    guid()
   );
 
   if (
@@ -418,54 +471,22 @@ recuperarDatosStorage();
 //////////////////////////////////////////////
 
 function viajar(viaje) {
-  if (viaje == null) {
-    Toastify({
-      text: "elija un destino",
-      duration: 4500,
-      className: "info",
-      style: {
-        background: "red",
-      },
-    }).showToast();
-  } else {
-    if (
-      billeteraVirtual.saldo >= viaje.costo &&
-      puntoDePartida.destino != viaje.destino
-    ) {
-      puntoDePartida = viaje;
+  puntoDePartida = viaje;
+  viajesRealizados.push(viaje);
+  localStorage.setItem("puntoDePartida", JSON.stringify(puntoDePartida));
+  dondeVoy();
+  dondeEstoy();
+  cardsViajes(filtrarViajes(), vuelos);
 
-      billeteraVirtual.saldo -= viaje.costo;
-      viajesRealizados.push(viaje);
-
-      gastoEnViajes = gastoEnViajes += viaje.costo;
-      destinoProximo = null;
-      localStorage.setItem("puntoDePartida", JSON.stringify(puntoDePartida));
-      dondeVoy();
-      dondeEstoy();
-      verSaldo();
-      cardsViajes(filtrarViajes(), vuelos);
-      localStorage.setItem("billetera", JSON.stringify(billeteraVirtual));
-
-      Toastify({
-        style: {
-          background: "#ffc107",
-          color: "black",
-        },
-        text: `ahora te encuentras en ${puntoDePartida.destino}`,
-        offset: {
-          x: 50,
-          y: 10,
-        },
-      }).showToast();
-    } else {
-      Toastify({
-        text: "no tienes dinero suficiente",
-        duration: 4500,
-        className: "info",
-        style: {
-          background: "red",
-        },
-      }).showToast();
-    }
-  }
+  Toastify({
+    style: {
+      background: "#ffc107",
+      color: "black",
+    },
+    text: `ahora te encuentras en ${puntoDePartida.destino}`,
+    offset: {
+      x: 50,
+      y: 10,
+    },
+  }).showToast();
 }
