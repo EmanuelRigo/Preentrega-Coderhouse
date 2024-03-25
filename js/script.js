@@ -27,11 +27,12 @@ const rowPasajesContainer = document.getElementById("rowPasajesContainer");
 let viajes = [];
 
 class Boleto {
-  constructor(nombre, apellido, email, origen, destino, id) {
+  constructor(nombre, apellido, email, origen, origenID, destino, id) {
     this.nombre = nombre;
     this.apellido = apellido;
     this.email = email;
     this.origen = origen;
+    this.origenID = origenID;
     this.destino = destino;
     this.id = id;
   }
@@ -75,7 +76,7 @@ async function traerData() {
   await consumirData("./js/viajes.json")
     .then((res) => {
       viajes.push(...res);
-      cardsViajes(filtrarViajes(), vuelos);
+      cardsViajes(viajes, vuelos);
       optionsSelect();
     })
     .catch(() => {
@@ -210,7 +211,11 @@ function cardsViajes(array, container) {
 function optionsSelect() {
   for (item of viajes) {
     let option = document.createElement("option");
-    option.innerHTML = `<option value=${item.id} class="m-0">${item.destino}</option>`;
+
+    option.value = item.destino + "/" + item.id;
+    option.classList.add("m-0");
+    option.innerHTML = `${item.destino}`;
+    //  selectOrigen.dataset.info(item.id);
     selectOrigen.appendChild(option);
   }
 }
@@ -252,7 +257,7 @@ function cardsPasajes() {
     <p class="fs-5">ID: ${boleto.id}</p>
   </div>
   <div class="col-md-3">
-    <button id=${boleto.id} class="fs-4 btn btn-outline-warning btnViajar">viajar</button>
+    <button data-info=${boleto.destino.id} id=${boleto.id} class="fs-4 btn btn-outline-warning btnViajar">viajar</button>
   </div>`;
 
       pasajesDiv.appendChild(card);
@@ -261,7 +266,8 @@ function cardsPasajes() {
 
     btnsViajar.forEach((btn) => {
       btn.addEventListener("click", () => {
-        if (puntoDePartida.destino === boleto.destino.destino) {
+        console.log(btn.dataset.info);
+        if (puntoDePartida.id == btn.dataset.info) {
           console.log(puntoDePartida.destino);
           console.log(boleto.destino.destino);
           Toastify({
@@ -272,12 +278,16 @@ function cardsPasajes() {
               background: "red",
             },
           }).showToast();
+        } else if (puntoDePartida.id != btn.dataset.id) {
+          console.log(puntoDePartida.id + " " + btn.dataset.info);
+          alert("no te encuentras en el lugar para el viaje");
         } else {
-          viajar(boleto.destino);
-          boletosArray = boletosArray.filter((boleto) => {
-            return boleto.id !== btn.id;
+          let boletoID = boletosArray.find((bto) => bto.id == btn.id);
+          console.log(boletoID);
+          viajar(boletoID.destino);
+          boletosArray = boletosArray.filter((bto) => {
+            return bto.id !== btn.id;
           });
-
           cardsPasajes();
         }
       });
@@ -347,7 +357,7 @@ btnViajesDisponibles.addEventListener("click", () => {
 });
 
 btnViajesTodos.addEventListener("click", () => {
-  cardsViajes(filtrarViajes(), vuelos);
+  cardsViajes(viajes, vuelos);
 });
 
 function ordenarViajes() {
@@ -416,11 +426,15 @@ function recuperarDatosStorage() {
 btnComprarBoleto.addEventListener("click", (e) => {
   e.preventDefault();
 
+  let valorSelect = selectOrigen.value.split("/");
+  console.log(valorSelect);
+
   let boletoNuevo = new Boleto(
     inputNombre.value,
     inputApellido.value,
     inputEmail.value,
-    selectOrigen.value,
+    valorSelect[0],
+    valorSelect[1],
     destinoProximo,
     guid()
   );
@@ -476,7 +490,7 @@ function viajar(viaje) {
   localStorage.setItem("puntoDePartida", JSON.stringify(puntoDePartida));
   dondeVoy();
   dondeEstoy();
-  cardsViajes(filtrarViajes(), vuelos);
+  cardsViajes(viajes, vuelos);
 
   Toastify({
     style: {
