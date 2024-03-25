@@ -86,7 +86,7 @@
         </div>
       </header>
       <main>
-        <div id="rowViajesContainer" class="row mt-4 d-none">
+        <div id="rowViajesContainer" class="row mt-4">
           <div class="col-md-5 p-0 pe-4" id="vuelos"></div>
           <div
             class="col-md-7 bg-warning rounded p-4 mb-2 d-flex flex-column justify-content-between"
@@ -170,17 +170,40 @@
                 </div>
               </div>
             </div>
-
-            <div id="vuelosRealizadosContainer" class="d-none">hola</div>
           </div>
         </div>
-        <div id="rowPasajesContainer" class="row mt-4 rounded bg-warning p-4">
-          <div id="pasajesDiv" class="col-md-12"></div>
+        <div
+          id="rowPasajesContainer"
+          class="row mt-4 rounded bg-warning p-4 d-none"
+        >
+          <div
+            id="pasajesDiv"
+            class="col-md-12 overflow-auto m-height rounded mb-3"
+          ></div>
           <div class="row m-0 border border-4 border-dark rounded py-2">
             <div class="col-md-4 p-0">
               <button
                 class="col btn btn-dark btn-lg fs-3 btn-lg"
                 id="btnVolverPasajes"
+              >
+                volver
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          id="rowViajesRealizadosContainer"
+          class="row mt-4 rounded bg-warning p-4 d-none"
+        >
+          <div
+            id="vuelosRealizadosContainer"
+            class="col-md-12 overflow-auto m-height rounded px-0 mb-3"
+          ></div>
+          <div class="row m-0 border border-4 border-dark rounded py-2">
+            <div class="col-md-4 p-0">
+              <button
+                class="col btn btn-dark btn-lg fs-3 btn-lg"
+                id="btnVolverViajesRealizados"
               >
                 volver
               </button>

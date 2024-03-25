@@ -4,11 +4,13 @@ const btnSumarSaldo = document.getElementById("btn__sumarSaldo");
 const btnViajesDisponibles = document.getElementById("btn__disponibles");
 const btnViajesTodos = document.getElementById("btn__viajesTodos");
 const btnOrdenarViajes = document.getElementById("btn__ordenarPrecio");
-//const btnViajar = document.getElementById("viajar");
 const btnVuelosRealizados = document.getElementById("btnVuelosRealizados");
 const btnComprarBoleto = document.getElementById("btnComprarBoleto");
 const btnVerPasajes = document.getElementById("btnVerPasajes");
 const btnVolverPasajes = document.getElementById("btnVolverPasajes");
+const btnVolverViajesRealizados = document.getElementById(
+  "btnVolverViajesRealizados"
+);
 const selectPrecio = document.getElementById("select__precio");
 const inputCargaSaldo = document.getElementById("input__sumarSaldo");
 const vuelos = document.getElementById("vuelos");
@@ -23,6 +25,9 @@ const selectOrigen = document.getElementById("selectOrigen");
 const pasajesDiv = document.getElementById("pasajesDiv");
 const rowViajesContainer = document.getElementById("rowViajesContainer");
 const rowPasajesContainer = document.getElementById("rowPasajesContainer");
+const rowViajesRealizadosContainer = document.getElementById(
+  "rowViajesRealizadosContainer"
+);
 
 let viajes = [];
 
@@ -257,7 +262,7 @@ function cardsPasajes() {
     <p class="fs-5">ID: ${boleto.id}</p>
   </div>
   <div class="col-md-3">
-    <button data-info=${boleto.destino.id} id=${boleto.id} class="fs-4 btn btn-outline-warning btnViajar">viajar</button>
+    <button data-origenid=${boleto.origenID} data-info=${boleto.destino.id} id=${boleto.id} class="fs-4 btn btn-outline-warning btnViajar">viajar</button>
   </div>`;
 
       pasajesDiv.appendChild(card);
@@ -278,10 +283,15 @@ function cardsPasajes() {
               background: "red",
             },
           }).showToast();
-        } else if (puntoDePartida.id != btn.dataset.id) {
-          console.log(puntoDePartida.id + " " + btn.dataset.info);
+        } else if (puntoDePartida.id != btn.dataset.origenid) {
+          console.log(
+            "pt:" + puntoDePartida.id + " " + "ds:" + btn.dataset.origenid
+          );
           alert("no te encuentras en el lugar para el viaje");
         } else {
+          console.log(
+            "pt:" + puntoDePartida.id + " " + "ds:" + btn.dataset.origenid
+          );
           let boletoID = boletosArray.find((bto) => bto.id == btn.id);
           console.log(boletoID);
           viajar(boletoID.destino);
@@ -404,7 +414,18 @@ function verViajesRealizados() {
   }
 }
 
+btnVolverViajesRealizados.addEventListener("click", () => {
+  rowViajesRealizadosContainer.classList.add("d-none");
+  rowViajesContainer.classList.remove("d-none");
+  btnViajesDisponibles.classList.remove("disabled");
+  btnViajesTodos.classList.remove("disabled");
+});
+
 btnVuelosRealizados.addEventListener("click", () => {
+  rowViajesContainer.classList.add("d-none");
+  rowViajesRealizadosContainer.classList.remove("d-none");
+  btnViajesDisponibles.classList.add("disabled");
+  btnViajesTodos.classList.add("disabled");
   verViajesRealizados();
 });
 
@@ -463,7 +484,9 @@ btnComprarBoleto.addEventListener("click", (e) => {
         background: "red",
       },
     }).showToast();
-  } else if (destinoProximo.destino == selectOrigen.value) {
+  } else if (
+    destinoProximo.destino == (() => selectOrigen.value.split("/")[0])()
+  ) {
     Toastify({
       text: "el destino debe ser diferente al origen",
       duration: 4500,
@@ -475,7 +498,9 @@ btnComprarBoleto.addEventListener("click", (e) => {
   } else {
     boletosArray.push(boletoNuevo);
     billeteraVirtual.saldo -= destinoProximo.costo;
+    localStorage.setItem("billetera", JSON.stringify(billeteraVirtual));
     verSaldo();
+
     console.log(boletosArray);
   }
 });
