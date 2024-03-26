@@ -51,13 +51,11 @@ let gastoEnViajes = 0;
 let viajesRealizados = [];
 let boletosArray = [];
 let destinoProximo = null;
-
-let opcion = false;
-
 let puntoDePartida = {
   destino: "Buenos Aires, Argentina",
   duracion: "7 días",
   costo: 2000,
+  id: 1010,
 };
 
 async function consumirData(url) {
@@ -220,7 +218,6 @@ function optionsSelect() {
     option.value = item.destino + "/" + item.id;
     option.classList.add("m-0");
     option.innerHTML = `${item.destino}`;
-    //  selectOrigen.dataset.info(item.id);
     selectOrigen.appendChild(option);
   }
 }
@@ -262,7 +259,7 @@ function cardsPasajes() {
     <p class="fs-5">ID: ${boleto.id}</p>
   </div>
   <div class="col-md-3">
-    <button data-origenid=${boleto.origenID} data-info=${boleto.destino.id} id=${boleto.id} class="fs-4 btn btn-outline-warning btnViajar">viajar</button>
+    <button data-origenid=${boleto.origenID} data-info=${boleto.destino.id} id=${boleto.id} class="fs-2 btn  btn-outline-warning btnViajar h-100 w-100 "> <i class="fa-solid fa-plane"></i> viajar</button>
   </div>`;
 
       pasajesDiv.appendChild(card);
@@ -284,17 +281,41 @@ function cardsPasajes() {
             },
           }).showToast();
         } else if (puntoDePartida.id != btn.dataset.origenid) {
-          console.log(
-            "pt:" + puntoDePartida.id + " " + "ds:" + btn.dataset.origenid
-          );
-          alert("no te encuentras en el lugar para el viaje");
+          console.log("pt:" + puntoDePartida.id + " " + "ds:" + btn);
+          Toastify({
+            text: "no te encuentras en el lugar de partida",
+            duration: 4500,
+            className: "info",
+            style: {
+              background: "red",
+            },
+          }).showToast();
         } else {
           console.log(
             "pt:" + puntoDePartida.id + " " + "ds:" + btn.dataset.origenid
           );
-          let boletoID = boletosArray.find((bto) => bto.id == btn.id);
+          let boletoID = boletosArray.find((bto) => bto.id == btn.id).destino;
           console.log(boletoID);
-          viajar(boletoID.destino);
+          let origenBto = viajes.find(
+            (viaje) => viaje.id == btn.dataset.origenid
+          );
+          console.log(origenBto);
+
+          let fecha = new Date();
+
+          let dia = fecha.getDate();
+          let mes = fecha.getMonth() + 1;
+          let año = fecha.getFullYear();
+
+          let fechaDeVuelo = dia + "/" + mes + "/" + año;
+
+          boletoID = {
+            ...boletoID,
+            fechaDeVuelo: fechaDeVuelo,
+            origen: origenBto,
+          };
+
+          viajar(boletoID);
           boletosArray = boletosArray.filter((bto) => {
             return bto.id !== btn.id;
           });
@@ -336,12 +357,6 @@ function dondeVoy() {
 }
 
 dondeVoy();
-
-/* btnViajar.addEventListener("click", () => {
-  viajar(destinoProximo);
-
-  cardsViajes(filtrarViajes(), vuelos);
-}); */
 
 function viajesDisponible() {
   let viajesPosibles = filtrarViajes().filter((viaje) => {
@@ -401,8 +416,8 @@ function verViajesRealizados() {
     for (item of viajesRealizados) {
       let card = document.createElement("div");
       card.className =
-        "d-flex rounded border border-dark p-2 text-dark align-items-center justify-content-between mb-2";
-      card.innerHTML = `<p class="m-0">${item.destino}  $${item.costo}</p>`;
+        "row rounded border border-dark p-2 text-dark align-items-center justify-content-between mb-2 mx-0";
+      card.innerHTML = `<div class="col-md-4"><p class="m-0">desde: ${item.origen.destino}</p> <p class="m-0">hacia: ${item.destino}</p> </div><div class="col-md-4"><p class="m-0">precio: $${item.costo} </p></div><div class="col-md-4"><p class="m-0">realizado el: ${item.fechaDeVuelo}`;
       vuelosRealizadosContainer.appendChild(card);
     }
 
@@ -442,6 +457,12 @@ function recuperarDatosStorage() {
     puntoDePartida = JSON.parse(localStorage.getItem("puntoDePartida"));
     dondeEstoy();
   }
+
+  localStorage.getItem("viajesRealizados") &&
+    (viajesRealizados = JSON.parse(localStorage.getItem("viajesRealizados")));
+
+  localStorage.getItem("boletosArray") &&
+    (boletosArray = JSON.parse(localStorage.getItem("boletosArray")));
 }
 
 btnComprarBoleto.addEventListener("click", (e) => {
@@ -500,7 +521,16 @@ btnComprarBoleto.addEventListener("click", (e) => {
     billeteraVirtual.saldo -= destinoProximo.costo;
     localStorage.setItem("billetera", JSON.stringify(billeteraVirtual));
     verSaldo();
-
+    Toastify({
+      style: {
+        background: "#ffc107",
+        color: "black",
+      },
+      text: `Pasaje comprado hacia ${destinoProximo.destino}`,
+    }).showToast();
+    billeteraVirtual.utilizada = true;
+    localStorage.setItem("boletosArray", JSON.stringify(boletosArray));
+    localStorage.setItem("billetera", JSON.stringify(billeteraVirtual));
     console.log(boletosArray);
   }
 });
@@ -512,6 +542,7 @@ recuperarDatosStorage();
 function viajar(viaje) {
   puntoDePartida = viaje;
   viajesRealizados.push(viaje);
+  localStorage.setItem("viajesRealizados", JSON.stringify(viajesRealizados));
   localStorage.setItem("puntoDePartida", JSON.stringify(puntoDePartida));
   dondeVoy();
   dondeEstoy();
@@ -523,9 +554,5 @@ function viajar(viaje) {
       color: "black",
     },
     text: `ahora te encuentras en ${puntoDePartida.destino}`,
-    offset: {
-      x: 50,
-      y: 10,
-    },
   }).showToast();
 }
