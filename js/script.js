@@ -79,7 +79,14 @@ function LlamarApiClima(city, country) {
     .then((dataJSON) => {
       if (dataJSON.cod === "404") {
         dondeEstoy();
-        alert("Ciudad no encontrada...");
+        Toastify({
+          text: "ciudad no encontrada",
+          duration: 4500,
+          className: "info",
+          style: {
+            background: "red",
+          },
+        }).showToast();
       } else {
         verDataClima(dataJSON);
       }
