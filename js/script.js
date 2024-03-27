@@ -618,6 +618,12 @@ btnComprarBoleto.addEventListener("click", (e) => {
     billeteraVirtual.utilizada = true;
     localStorage.setItem("boletosArray", JSON.stringify(boletosArray));
     localStorage.setItem("billetera", JSON.stringify(billeteraVirtual));
+    inputApellido.value = null;
+    inputNombre.value = null;
+    inputEmail.value = null;
+    destinoProximo = null;
+    selectOrigen.value = null;
+    dondeVoy();
   }
 });
 
