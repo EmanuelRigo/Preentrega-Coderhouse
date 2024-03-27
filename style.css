@@ -6,3 +6,8 @@ body {
 .m-height {
   max-height: 40vh;
 }
+
+.position-relative span {
+  top: 75px;
+  left: 15px;
+}

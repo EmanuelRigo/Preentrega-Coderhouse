@@ -4,7 +4,7 @@
   { "id": 1003, "destino": "Roma, Italia", "duracion": 5, "costo": 1200 },
   {
     "id": 1004,
-    "destino": "Nueva York, EE. UU.",
+    "destino": "Nueva York, Estados Unidos",
     "duracion": 6,
     "costo": 1800
   },

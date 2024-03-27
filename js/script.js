@@ -1,4 +1,5 @@
 const ubicacionActual = document.getElementById("ubicacion");
+const ubicacionClima = document.getElementById("ubicacionClima");
 const saldoDOM = document.getElementById("saldo");
 const btnSumarSaldo = document.getElementById("btn__sumarSaldo");
 const btnViajesDisponibles = document.getElementById("btn__disponibles");
@@ -32,7 +33,16 @@ const rowViajesRealizadosContainer = document.getElementById(
 let viajes = [];
 
 class Boleto {
-  constructor(nombre, apellido, email, origen, origenID, destino, id) {
+  constructor(
+    nombre,
+    apellido,
+    email,
+    origen,
+    origenID,
+    destino,
+    id,
+    fechaHora
+  ) {
     this.nombre = nombre;
     this.apellido = apellido;
     this.email = email;
@@ -40,6 +50,7 @@ class Boleto {
     this.origenID = origenID;
     this.destino = destino;
     this.id = id;
+    this.fechaHora = fechaHora;
   }
 }
 
@@ -57,6 +68,51 @@ let puntoDePartida = {
   costo: 2000,
   id: 1010,
 };
+
+function LlamarApiClima(city, country) {
+  const apiId = "dd4ac3cdf4fd6a0d93f97bf97efdad05";
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${apiId}`;
+  fetch(url)
+    .then((data) => {
+      return data.json();
+    })
+    .then((dataJSON) => {
+      if (dataJSON.cod === "404") {
+        dondeEstoy();
+        alert("Ciudad no encontrada...");
+      } else {
+        verDataClima(dataJSON);
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      dondeEstoy();
+    });
+}
+
+function verDataClima(data) {
+  const {
+    name,
+    main: { temp, temp_min, temp_max },
+    weather: weather,
+  } = data;
+
+  const grados = kelvinACentigrados(temp);
+  const min = kelvinACentigrados(temp_min);
+  const max = kelvinACentigrados(temp_max);
+
+  puntoDePartida = {
+    ...puntoDePartida,
+    grados: grados,
+    clima: weather[0].main,
+  };
+
+  dondeEstoy();
+}
+
+function kelvinACentigrados(temp) {
+  return parseInt(temp - 273.15);
+}
 
 async function consumirData(url) {
   try {
@@ -102,17 +158,37 @@ traerData();
 //////////////////////////////////////////////
 
 function dondeEstoy() {
+  let icono;
+
+  switch (puntoDePartida.clima) {
+    case "Rain":
+      icono = `<i class="fa-solid fa-cloud-showers-heavy"></i>`;
+      break;
+    case "Clear":
+      icono = `<i class="fa-regular fa-sun"></i>`;
+      break;
+    case "Clouds":
+      icono = `<i class="fa-solid fa-cloud"></i>`;
+      break;
+    default:
+      icono = `<i class="fa-solid fa-question"></i>`;
+  }
+
   ubicacionActual.innerHTML = "";
   const div = document.createElement("div");
-
   div.innerHTML = `
   <h3>Ubicacion</h3>
   <p class="fs-5 ">${puntoDePartida.destino}</p>`;
-
   ubicacionActual.appendChild(div);
-}
 
-dondeEstoy();
+  ubicacionClima.innerHTML = "";
+  const divClima = document.createElement("div");
+  divClima.innerHTML = `
+  <p class="display-1 position-relative">${icono}  <span class="position-absolute  fs-6 text-dark translate-middle badge rounded-pill bg-warning border border-4 border-dark">
+  ${puntoDePartida.grados}°
+  </span></p>`;
+  ubicacionClima.appendChild(divClima);
+}
 
 function sumarSaldo() {
   if (inputCargaSaldo.value <= 0) {
@@ -222,9 +298,19 @@ function optionsSelect() {
   }
 }
 
+function fechaActual() {
+  let fecha = new Date();
+
+  let minuto = fecha.getMinutes();
+  let hora = fecha.getHours();
+  let dia = fecha.getDate();
+  let mes = fecha.getMonth() + 1;
+  let año = fecha.getFullYear();
+  return hora + ":" + minuto + " " + dia + "/" + mes + "/" + año;
+}
+
 function cardsPasajes() {
   pasajesDiv.innerHTML = "";
-
   if (boletosArray.length == 0) {
     let card = document.createElement("div");
     card.classList.add(
@@ -251,7 +337,7 @@ function cardsPasajes() {
       card.innerHTML = `    <div class="col-md-4">
     <p class="fs-5">${boleto.nombre} ${boleto.apellido}</p>
     <p class="fs-5">$${boleto.destino.costo}</p>
-    <p class="fs-5">hora"12:30"</p>
+    <p class="fs-5">fecha y hora de compra: ${boleto.fechaHora}</p>
   </div>
   <div class="col-md-5">
     <p class="fs-5">Desde: ${boleto.origen}</p>
@@ -268,10 +354,7 @@ function cardsPasajes() {
 
     btnsViajar.forEach((btn) => {
       btn.addEventListener("click", () => {
-        console.log(btn.dataset.info);
         if (puntoDePartida.id == btn.dataset.info) {
-          console.log(puntoDePartida.destino);
-          console.log(boleto.destino.destino);
           Toastify({
             text: `ya te encuentras en ${puntoDePartida.destino}`,
             duration: 4500,
@@ -281,7 +364,6 @@ function cardsPasajes() {
             },
           }).showToast();
         } else if (puntoDePartida.id != btn.dataset.origenid) {
-          console.log("pt:" + puntoDePartida.id + " " + "ds:" + btn);
           Toastify({
             text: "no te encuentras en el lugar de partida",
             duration: 4500,
@@ -291,27 +373,15 @@ function cardsPasajes() {
             },
           }).showToast();
         } else {
-          console.log(
-            "pt:" + puntoDePartida.id + " " + "ds:" + btn.dataset.origenid
-          );
           let boletoID = boletosArray.find((bto) => bto.id == btn.id).destino;
-          console.log(boletoID);
+
           let origenBto = viajes.find(
             (viaje) => viaje.id == btn.dataset.origenid
           );
-          console.log(origenBto);
-
-          let fecha = new Date();
-
-          let dia = fecha.getDate();
-          let mes = fecha.getMonth() + 1;
-          let año = fecha.getFullYear();
-
-          let fechaDeVuelo = dia + "/" + mes + "/" + año;
 
           boletoID = {
             ...boletoID,
-            fechaDeVuelo: fechaDeVuelo,
+            fechaDeVuelo: fechaActual(),
             origen: origenBto,
           };
 
@@ -359,11 +429,8 @@ function dondeVoy() {
 dondeVoy();
 
 function viajesDisponible() {
-  let viajesPosibles = filtrarViajes().filter((viaje) => {
-    return (
-      viaje.costo <= billeteraVirtual.saldo &&
-      viaje.destino != puntoDePartida.destino
-    );
+  let viajesPosibles = viajes.filter((viaje) => {
+    return viaje.costo <= billeteraVirtual.saldo;
   });
 
   if (viajesPosibles.length == 0) {
@@ -439,6 +506,7 @@ btnVolverViajesRealizados.addEventListener("click", () => {
 btnVuelosRealizados.addEventListener("click", () => {
   rowViajesContainer.classList.add("d-none");
   rowViajesRealizadosContainer.classList.remove("d-none");
+  rowPasajesContainer.classList.add("d-none");
   btnViajesDisponibles.classList.add("disabled");
   btnViajesTodos.classList.add("disabled");
   verViajesRealizados();
@@ -453,9 +521,16 @@ function recuperarDatosStorage() {
 
   if (!JSON.parse(localStorage.getItem("puntoDePartida"))) {
     localStorage.setItem("puntoDePartida", JSON.stringify(puntoDePartida));
+    LlamarApiClima(
+      (puntoDePartida.destino.split(",")[0],
+      puntoDePartida.destino.split(",")[1].trim())
+    );
   } else {
     puntoDePartida = JSON.parse(localStorage.getItem("puntoDePartida"));
-    dondeEstoy();
+    LlamarApiClima(
+      (puntoDePartida.destino.split(",")[0],
+      puntoDePartida.destino.split(",")[1].trim())
+    );
   }
 
   localStorage.getItem("viajesRealizados") &&
@@ -463,13 +538,17 @@ function recuperarDatosStorage() {
 
   localStorage.getItem("boletosArray") &&
     (boletosArray = JSON.parse(localStorage.getItem("boletosArray")));
+
+  LlamarApiClima(
+    (puntoDePartida.destino.split(",")[0],
+    puntoDePartida.destino.split(",")[1].trim())
+  );
 }
 
 btnComprarBoleto.addEventListener("click", (e) => {
   e.preventDefault();
 
   let valorSelect = selectOrigen.value.split("/");
-  console.log(valorSelect);
 
   let boletoNuevo = new Boleto(
     inputNombre.value,
@@ -478,7 +557,8 @@ btnComprarBoleto.addEventListener("click", (e) => {
     valorSelect[0],
     valorSelect[1],
     destinoProximo,
-    guid()
+    guid(),
+    fechaActual()
   );
 
   if (
@@ -531,7 +611,6 @@ btnComprarBoleto.addEventListener("click", (e) => {
     billeteraVirtual.utilizada = true;
     localStorage.setItem("boletosArray", JSON.stringify(boletosArray));
     localStorage.setItem("billetera", JSON.stringify(billeteraVirtual));
-    console.log(boletosArray);
   }
 });
 
@@ -541,6 +620,10 @@ recuperarDatosStorage();
 
 function viajar(viaje) {
   puntoDePartida = viaje;
+  LlamarApiClima(
+    (puntoDePartida.destino.split(",")[0],
+    puntoDePartida.destino.split(",")[1].trim())
+  );
   viajesRealizados.push(viaje);
   localStorage.setItem("viajesRealizados", JSON.stringify(viajesRealizados));
   localStorage.setItem("puntoDePartida", JSON.stringify(puntoDePartida));
