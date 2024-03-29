@@ -16,13 +16,19 @@
     />
     <link rel="stylesheet" href="style.css" />
 
-    <title>Document</title>
+    <title>Simulador de viajes</title>
   </head>
   <body class="bg-dark">
     <div class="container h-100 d-md-flex flex-column justify-content-center">
       <header class="row bg-warning rounded p-3">
         <div class="col-md-3 row">
-          <div class="col-md-6" id="ubicacion"></div>
+          <div class="col-md-6">
+            <div class="col-md-12" id="ubicacion"></div>
+            <span
+              class="badge rounded-pill text-bg-dark fs-5 mb-1"
+              id="tiempoReal"
+            ></span>
+          </div>
           <div
             class="col-md-6 d-flex justify-content-center align-items-center"
             id="ubicacionClima"
@@ -58,13 +64,16 @@
           class="col-md-6 d-flex align-items-center justify-content-center flex-column"
         >
           <div class="input-group w-100">
-            <button
+            <!--   <p
               class="btn btn-outline-dark border-3 border-dark"
               type="button"
               id="btn__ordenarPrecio"
             >
               ordenar por precio
-            </button>
+            </p> -->
+            <span class="input-group-text border-3 border-dark"
+              >ordenar por precio</span
+            >
             <select
               class="form-select border-3 border-dark border-start-0"
               aria-label="Default select example"
@@ -216,6 +225,13 @@
         </div>
       </main>
     </div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js"
+      integrity="sha512-4F1cxYdMiAW98oomSLaygEwmCnIP38pb4Kx70yQYqRwLVCs3DbRumfBq82T08g/4LJ/smbFGFpmeFlQgoDccgg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.36/moment-timezone-with-data.min.js"></script>
     <script
       src="https://kit.fontawesome.com/cb4aed2de1.js"
       crossorigin="anonymous"

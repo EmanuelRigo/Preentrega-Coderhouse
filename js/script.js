@@ -1,10 +1,10 @@
 const ubicacionActual = document.getElementById("ubicacion");
+const tiempoReal = document.getElementById("tiempoReal");
 const ubicacionClima = document.getElementById("ubicacionClima");
 const saldoDOM = document.getElementById("saldo");
 const btnSumarSaldo = document.getElementById("btn__sumarSaldo");
 const btnViajesDisponibles = document.getElementById("btn__disponibles");
 const btnViajesTodos = document.getElementById("btn__viajesTodos");
-const btnOrdenarViajes = document.getElementById("btn__ordenarPrecio");
 const btnVuelosRealizados = document.getElementById("btnVuelosRealizados");
 const btnComprarBoleto = document.getElementById("btnComprarBoleto");
 const btnVerPasajes = document.getElementById("btnVerPasajes");
@@ -63,11 +63,14 @@ let viajesRealizados = [];
 let boletosArray = [];
 let destinoProximo = null;
 let puntoDePartida = {
-  destino: "Buenos Aires, Argentina",
+  destino: "Buenos Aires,Argentina",
   duracion: "7 días",
   costo: 2000,
   id: 1010,
+  continente: "America",
 };
+
+/////funciones de traer data y apis
 
 function LlamarApiClima(city, country) {
   const apiId = "dd4ac3cdf4fd6a0d93f97bf97efdad05";
@@ -160,9 +163,7 @@ async function traerData() {
 
 traerData();
 
-//////////////////////////////////////////////
-////////////Funciones para la tercer Preentrega/////////////
-//////////////////////////////////////////////
+///////////funciones de DOM
 
 function dondeEstoy() {
   let icono;
@@ -177,6 +178,9 @@ function dondeEstoy() {
     case "Clouds":
       icono = `<i class="fa-solid fa-cloud"></i>`;
       break;
+    case "Mist":
+      icono = `<i class="fa-solid fa-smog"></i>`;
+      break;
     default:
       icono = `<i class="fa-solid fa-question"></i>`;
   }
@@ -185,7 +189,7 @@ function dondeEstoy() {
   const div = document.createElement("div");
   div.innerHTML = `
   <h3>Ubicacion</h3>
-  <p class="fs-5 ">${puntoDePartida.destino}</p>`;
+  <p class="fs-5 mb-0">${puntoDePartida.destino}</p>`;
   ubicacionActual.appendChild(div);
 
   ubicacionClima.innerHTML = "";
@@ -237,7 +241,7 @@ function verSaldo() {
   }
 }
 
-//esta funcion la copie para generar un id
+////esta funcion la copie de google para generar un id random
 function guid() {
   function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)
@@ -263,10 +267,6 @@ function guid() {
 ////////////////////////////////////////
 
 verSaldo();
-
-function filtrarViajes() {
-  return viajes.filter((viaje) => viaje.destino != puntoDePartida.destino);
-}
 
 function cardsViajes(array, container) {
   container.innerHTML = "";
@@ -303,17 +303,6 @@ function optionsSelect() {
     option.innerHTML = `${item.destino}`;
     selectOrigen.appendChild(option);
   }
-}
-
-function fechaActual() {
-  let fecha = new Date();
-
-  let minuto = fecha.getMinutes();
-  let hora = fecha.getHours();
-  let dia = fecha.getDate();
-  let mes = fecha.getMonth() + 1;
-  let año = fecha.getFullYear();
-  return hora + ":" + minuto + " " + dia + "/" + mes + "/" + año;
 }
 
 function cardsPasajes() {
@@ -388,7 +377,7 @@ function cardsPasajes() {
 
           boletoID = {
             ...boletoID,
-            fechaDeVuelo: fechaActual(),
+            fechaDeVuelo: dateMoment.format("dddd DD MMMM YYYY"),
             origen: origenBto,
           };
 
@@ -460,7 +449,7 @@ btnViajesTodos.addEventListener("click", () => {
 });
 
 function ordenarViajes() {
-  let viajesOrdenados = filtrarViajes().sort((viaje1, viaje2) => {
+  let viajesOrdenados = viajes.sort((viaje1, viaje2) => {
     if (selectPrecio.value == "precioMasBajo") {
       return viaje1.costo - viaje2.costo;
     } else if (selectPrecio.value == "precioMasAlto") {
@@ -471,7 +460,7 @@ function ordenarViajes() {
   cardsViajes(viajesOrdenados, vuelos);
 }
 
-btnOrdenarViajes.addEventListener("click", () => {
+selectPrecio.addEventListener("change", () => {
   ordenarViajes();
 });
 
@@ -519,6 +508,8 @@ btnVuelosRealizados.addEventListener("click", () => {
   verViajesRealizados();
 });
 
+/////////funciones recuperar datos Storage
+
 function recuperarDatosStorage() {
   let billetera = JSON.parse(localStorage.getItem("billetera"));
   if (billetera.utilizada == true) {
@@ -550,6 +541,8 @@ function recuperarDatosStorage() {
     (puntoDePartida.destino.split(",")[0],
     puntoDePartida.destino.split(",")[1].trim())
   );
+
+  actualizarReloj();
 }
 
 btnComprarBoleto.addEventListener("click", (e) => {
@@ -565,7 +558,7 @@ btnComprarBoleto.addEventListener("click", (e) => {
     valorSelect[1],
     destinoProximo,
     guid(),
-    fechaActual()
+    dateMoment.format("dddd DD MMMM YYYY")
   );
 
   if (
@@ -643,6 +636,7 @@ function viajar(viaje) {
   dondeVoy();
   dondeEstoy();
   cardsViajes(viajes, vuelos);
+  actualizarReloj();
 
   Toastify({
     style: {
@@ -652,3 +646,21 @@ function viajar(viaje) {
     text: `ahora te encuentras en ${puntoDePartida.destino}`,
   }).showToast();
 }
+
+///funcion para reloj en tiempo real con momentJs
+
+moment.locale("es");
+let dateMoment = moment();
+
+function actualizarReloj() {
+  let tiempoActual = moment()
+    .tz(
+      `${puntoDePartida.continente}/${puntoDePartida.destino
+        .split(",")[0]
+        .replace(/ /g, "_")}`
+    )
+    .format("HH:mm:ss");
+  tiempoReal.innerHTML = tiempoActual;
+}
+
+setInterval(actualizarReloj, 1000);

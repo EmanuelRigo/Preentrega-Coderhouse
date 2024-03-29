@@ -1,26 +1,71 @@
 [
-  { "id": 1001, "destino": "París, Francia", "duracion": 7, "costo": 1500 },
-  { "id": 1002, "destino": "Tokio, Japón", "duracion": 10, "costo": 2500 },
-  { "id": 1003, "destino": "Roma, Italia", "duracion": 5, "costo": 1200 },
+  {
+    "id": 1001,
+    "destino": "Paris,France",
+    "continente": "Europe",
+    "duracion": 7,
+    "costo": 1500
+  },
+  {
+    "id": 1002,
+    "destino": "Tokyo,Japan",
+    "continente": "Asia",
+    "duracion": 10,
+    "costo": 2500
+  },
+  {
+    "id": 1003,
+    "destino": "Rome,Italy",
+    "continente": "Europe",
+    "duracion": 5,
+    "costo": 1200
+  },
   {
     "id": 1004,
-    "destino": "Nueva York, Estados Unidos",
+    "destino": "New York,United States",
+    "continente": "America",
     "duracion": 6,
     "costo": 1800
   },
-  { "id": 1005, "destino": "Sídney, Australia", "duracion": 8, "costo": 2200 },
-  { "id": 1006, "destino": "Barcelona, España", "duracion": 4, "costo": 1000 },
-  { "id": 1007, "destino": "Machu Picchu, Perú", "duracion": 3, "costo": 800 },
+  {
+    "id": 1005,
+    "destino": "Sydney,Australia",
+    "continente": "Australia",
+    "duracion": 8,
+    "costo": 2200
+  },
+  {
+    "id": 1006,
+    "destino": "Madrid,Spain",
+    "continente": "Europe",
+    "duracion": 4,
+    "costo": 1000
+  },
+  {
+    "id": 1007,
+    "destino": "Lima,Perú",
+    "continente": "America",
+    "duracion": 3,
+    "costo": 800
+  },
   {
     "id": 1008,
-    "destino": "Ciudad del Cabo, Sudáfrica",
+    "destino": "Shanghai,China",
+    "continente": "Asia",
     "duracion": 9,
     "costo": 2800
   },
-  { "id": 1009, "destino": "Bangkok, Tailandia", "duracion": 7, "costo": 2700 },
+  {
+    "id": 1009,
+    "destino": "Bangkok,Thailand",
+    "continente": "Asia",
+    "duracion": 7,
+    "costo": 2700
+  },
   {
     "id": 1010,
-    "destino": "Buenos Aires, Argentina",
+    "destino": "Buenos Aires,Argentina",
+    "continente": "America",
     "duracion": 7,
     "costo": 2000
   }
