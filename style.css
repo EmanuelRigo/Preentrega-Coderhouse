@@ -7,7 +7,17 @@ body {
   max-height: 40vh;
 }
 
+.container-vuelos {
+  max-height: 450px;
+}
+
 .position-relative span {
   top: 75px;
   left: 15px;
+}
+
+@media (min-width: 1400px) {
+  .container-vuelos {
+    max-height: 700px;
+  }
 }
