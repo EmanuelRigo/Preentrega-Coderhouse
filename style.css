@@ -16,6 +16,10 @@ body {
   left: 15px;
 }
 
+.weather_icon {
+  font-size: 4.5rem;
+}
+
 @media (min-width: 1400px) {
   .container-vuelos {
     max-height: 700px;

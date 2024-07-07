@@ -194,10 +194,11 @@ function dondeEstoy() {
 
   ubicacionClima.innerHTML = "";
   const divClima = document.createElement("div");
+  divClima.classList.add("position-relative");
   divClima.innerHTML = `
-  <p class="display-1 position-relative">${icono}  <span class="position-absolute  fs-6 text-dark translate-middle badge rounded-pill bg-warning border border-4 border-dark">
-  ${puntoDePartida.grados}°
-  </span></p>`;
+  <p class="weather_icon">${icono} </p>  <span class="position-absolute fs-6 text-dark translate-middle badge rounded-pill bg-warning border border-4 border-dark"> ${puntoDePartida.grados}°</span>
+ 
+ `;
   ubicacionClima.appendChild(divClima);
 }
 
@@ -275,9 +276,11 @@ function cardsViajes(array, container) {
     card.className =
       "d-flex rounded border border-warning p-2 text-warning align-items-center justify-content-between mb-2 ";
     card.id = item.id;
-    card.innerHTML = `<p class="m-0">${item.destino}  $${item.costo}</p>
+    card.innerHTML = `<p class="m-0">${item.destino}</p>
+   
+   
 
-    <button type="button" id=${item.id} class="btn btn-warning btn__viaje">seleccionar</button>`;
+    <button type="button" id=${item.id} class="btn btn-warning btn__viaje">$${item.costo}</button>`;
     container.appendChild(card);
   }
 
