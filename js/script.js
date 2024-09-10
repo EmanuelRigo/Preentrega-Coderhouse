@@ -131,7 +131,7 @@ async function consumirData(url) {
     return data;
   } catch {
     Toastify({
-      text: "algo salio mal",
+      text: "Algo salio mal",
       duration: 4500,
       className: "info",
       style: {
@@ -157,7 +157,7 @@ async function traerData() {
           background: "red",
         },
       }).showToast();
-      vuelos.innerHTML = `<p class="fs-3 text-danger">no hay sistema</p>`;
+      vuelos.innerHTML = `<p class="fs-3 text-danger">No hay sistema</p>`;
     });
 }
 
@@ -205,7 +205,7 @@ function dondeEstoy() {
 function sumarSaldo() {
   if (inputCargaSaldo.value <= 0) {
     Toastify({
-      text: "elija un monto mayor a 0",
+      text: "Elija un monto mayor a 0",
       duration: 4500,
       className: "info",
       style: {
@@ -320,7 +320,7 @@ function cardsPasajes() {
       "p-3",
       "mb-3"
     );
-    card.innerHTML = ` <p class="fs-3 m-0">no hay pasajes comprados todavia</p>`;
+    card.innerHTML = ` <p class="fs-3 m-0">No hay pasajes comprados todavia</p>`;
     pasajesDiv.appendChild(card);
   } else {
     for (boleto of boletosArray) {
@@ -470,7 +470,7 @@ selectPrecio.addEventListener("change", () => {
 function verViajesRealizados() {
   if (viajesRealizados.length == 0) {
     vuelosRealizadosContainer.innerHTML = "";
-    vuelosRealizadosContainer.innerHTML = `<p class="fs-4">todavia no se han realizados vuelos</p>`;
+    vuelosRealizadosContainer.innerHTML = `<p class="fs-4">Todavia no se han realizados vuelos</p>`;
   } else {
     let costoTotal = viajesRealizados.reduce((acumulador, viaje) => {
       return acumulador + viaje.costo;
